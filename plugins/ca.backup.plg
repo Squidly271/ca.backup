@@ -6,7 +6,7 @@
 <!ENTITY md5       "ae02299845e4ac1da71aa5f3c5f4b66a">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
-<!ENTITY github    "Squidly271/ca.update.applications">
+<!ENTITY github    "Squidly271/ca.backup">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
 ]>
 
