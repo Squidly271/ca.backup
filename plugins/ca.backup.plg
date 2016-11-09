@@ -1,0 +1,93 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "ca.backup">
+<!ENTITY author    "Andrew Zawadzki">
+<!ENTITY version   "2016.11.09">
+<!ENTITY md5       "ed0ed1ee16ff6f8f75ff077eb27a539e">
+<!ENTITY launch    "Settings/BackupMain">
+<!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
+<!ENTITY github    "Squidly271/ca.update.applications">
+<!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
+
+<CHANGES>
+###2016.11.05
+- Initial Release
+
+</CHANGES>
+
+<!-- The 'pre-install' script. -->
+<FILE Run="/usr/bin/php">
+<INLINE>
+<![CDATA[
+<?
+  $version = parse_ini_file("/etc/unraid-version");
+  
+  if ( version_compare($version['version'],"6.1.0", "<") )
+  {
+    echo "********************************************************************\n";
+    echo "\n";
+    echo "Community Applications Requires unRaid version 6.1 or greater to run\n";
+    echo "\n";
+    echo "********************************************************************\n";
+    exit(1);
+  }
+  if ( is_file("/boot/config/plugins/community.applications.plg") ) {
+    $version = trim(exec("/usr/local/sbin/plugin version /boot/config/plugins/community.applications.plg"));
+    if ( strcmp($version,"2016.11.06") < 0 ) {
+      echo "Your installed version of Community Applications already includes Appdata Backup / Restore... Aborting Installation\n";
+      exit(1);
+    }
+  }
+?>
+]]>
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+# Remove old 'source' files
+rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|grep -v '&version;')
+</INLINE>
+</FILE>
+
+<!--
+The 'source' file.
+-->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;-x86_64-1.txz" Run="upgradepkg --install-new">
+<URL>https://raw.github.com/&github;/master/archive/&name;-&version;-x86_64-1.txz</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<!--
+The 'post-install' script
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+/usr/local/emhttp/plugins/ca.backup/scripts/removeCron.php
+/usr/local/emhttp/plugins/ca.backup/scripts/addCron.php
+mv /boot/config/plugins/community.applications/BackupSettings.json /boot/config/plugins/ca.backup/BackupSettings.json > /dev/null 2> /dev/null
+echo ""
+echo "----------------------------------------------------"
+echo " &name; has been installed."
+echo " Copyright 2015-2016, Andrew Zawadzki"
+echo " Version: &version;"
+echo "----------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+/usr/local/emhttp/plugins/ca.backup/scripts/removeCron.php
+removepkg &name;-&version;-x86_64-1
+rm -rf &plugdir;
+rm -rf /boot/config/plugins/&name;
+</INLINE>
+</FILE> 
+</PLUGIN>
