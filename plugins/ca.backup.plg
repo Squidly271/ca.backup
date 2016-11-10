@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2016.11.09a">
-<!ENTITY md5       "43b7b2aaae7f75af9fea5d1156167691">
+<!ENTITY version   "2016.11.09b">
+<!ENTITY md5       "a9ac38f84b05dfebcac53d0468d1eab0">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
