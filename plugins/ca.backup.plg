@@ -68,9 +68,9 @@ The 'post-install' script
 <INLINE>
 mkdir -p /tmp/ca.backup/tempFiles
 mkdir -p /var/lib/docker/unraid/ca.backup.datastore
+mv /boot/config/plugins/community.applications/BackupSettings.json /boot/config/plugins/ca.backup/BackupSettings.json > /dev/null 2> /dev/null
 /usr/local/emhttp/plugins/ca.backup/scripts/removeCron.php
 /usr/local/emhttp/plugins/ca.backup/scripts/addCron.php
-mv /boot/config/plugins/community.applications/BackupSettings.json /boot/config/plugins/ca.backup/BackupSettings.json > /dev/null 2> /dev/null
 echo ""
 echo "----------------------------------------------------"
 echo " &name; has been installed."
