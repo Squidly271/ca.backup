@@ -4,9 +4,7 @@
 # Community Applications copyright 2015-2016, Andrew Zawadzki #
 #                                                             #
 ###############################################################
-$unRaidSettings = my_parse_ini_file($communityPaths['unRaidVersion']);
-$unRaidVersion = $unRaidSettings['version'];
-if ($unRaidVersion == "6.2") $unRaidVersion = "6.2.0";
+
 
 ####################################################################################################
 #                                                                                                  #

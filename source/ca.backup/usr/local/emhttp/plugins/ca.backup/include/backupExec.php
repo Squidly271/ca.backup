@@ -5,8 +5,8 @@
 #                                                             #
 ###############################################################
 
-require_once("/usr/local/emhttp/plugins/community.applications/include/paths.php");
-require_once("/usr/local/emhttp/plugins/community.applications/include/helpers.php");
+require_once("/usr/local/emhttp/plugins/ca.backup/include/paths.php");
+require_once("/usr/local/emhttp/plugins/ca.backup/include/helpers.php");
 
 function getDates() {
   global $communityPaths;

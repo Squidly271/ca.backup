@@ -10,7 +10,7 @@ var URL = "/plugins/ca.backup/include/backupExec.php";
 $(function() {
   setInterval(function() {
     checkBackup();
-  }, 1000);
+  }, 3000);
 });
 
 function checkBackup() {

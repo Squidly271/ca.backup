@@ -727,5 +727,5 @@ jQuery(document).ready(function() {
 > <center><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7M7CBCVU732XG' target='_blank'><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"></a></center>
 
 <a href="#" class="back-to-top" style="display: inline;">
-<img src='/plugins/community.applications/images/up.png' style='width:50px;height:50px' href="#" class="back-to-top"></img>
+<img src='/plugins/ca.backup/images/up.png' style='width:50px;height:50px' href="#" class="back-to-top"></img>
 </a>

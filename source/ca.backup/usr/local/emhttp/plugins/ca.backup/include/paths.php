@@ -15,8 +15,6 @@ $plugin = "ca.backup";
 
 $communityPaths['tempFiles']                     = "/tmp/ca.backup/tempFiles";                            /* path to temporary files */
 $communityPaths['persistentDataStore']           = "/var/lib/docker/unraid/ca.backup.datastore";          /* anything in this folder is NOT deleted upon an update of templates */
-exec("mkdir -p ".$communityPaths['tempFiles']);
-exec("mkdir -p ".$communityPaths['persistentDataStore']);
 
 $communityPaths['unRaidVersion']                 = "/etc/unraid-version";
 $communityPaths['backupOptions']                 = "/boot/config/plugins/ca.backup/BackupOptions.json";
