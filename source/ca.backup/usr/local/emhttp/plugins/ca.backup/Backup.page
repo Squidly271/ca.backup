@@ -547,7 +547,7 @@ jQuery(document).ready(function() {
 .fileTree{width:305px;max-height:150px;overflow:scroll;position:absolute;z-index:100;display:none;}
 </style>
 <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.filetree.css">
-<div id='upgradeAvailable' style='display:none'><center> <font color='red'>An update to CA Cleanup Appdata is Available. Click <a href='/Plugins'>HERE</a> to install the update</center></font></div>
+<div id='upgradeAvailable' style='display:none'><center> <font color='red'>An update to CA Appdata Backup / Restore is Available. Click <a href='/Plugins'>HERE</a> to install the update</center></font></div>
 
 > For help with this plugin, click here (a new tab will open with the help file)  <strong><font size="2"><a href="Settings/caHelp#backupSettings" target="_blank">HELP</a></font></strong>
 
