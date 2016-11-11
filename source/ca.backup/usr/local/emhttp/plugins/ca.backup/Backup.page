@@ -7,6 +7,7 @@ Title="Backup / Settings"
 # Community Applications copyright 2015-2016, Andrew Zawadzki #
 #                                                             #
 ###############################################################
+require_once("/usr/local/emhttp/plugins/ca.backup/include/caCredits.php");
 
 function logger($string) {
   shell_exec("logger 'CA Backup: $string'");
@@ -31,6 +32,16 @@ if ( ! function_exists('my_parse_ini_string') ) {
 }
 
 $plugin = "ca.backup";
+
+$installedVersion = exec("/usr/local/emhttp/plugins/dynamix.plugin.manager/scripts/plugin version /var/log/plugins/ca.cleanup.appdata.plg");
+if ( is_file("/tmp/plugins/ca.cleanup.appdata.plg") ) {
+  $upgradeVersion = exec("/usr/local/emhttp/plugins/dynamix.plugin.manager/scripts/plugin version /tmp/plugins/ca.cleanup.appdata.plg");
+} else {
+  $upgradeVersion = "0";
+}
+if ( $installedVersion < $upgradeVersion ) {
+  $upgradeAvailable = "true";
+}
 
 $backupOptions = json_decode(@file_get_contents("/boot/config/plugins/ca.backup/BackupOptions.json"),true);
 if ( ! isset($backupOptions['rsyncOption']) ) {  $backupOptions['rsyncOption'] = "-avXHq --delete"; }
@@ -205,7 +216,9 @@ var URL = "/plugins/<?=$plugin?>/include/backupExec.php";
 var appliedChanges = false;
 
 $(function() {
-
+  if ( "<?=$upgradeAvailable?>" == "true" ) {
+    $("#upgradeAvailable").show();
+  }
   <?if (! $tabbed):?>
   $(".tabbedOnly").hide();
   <?endif;?>
@@ -488,7 +501,9 @@ function abort() {
       $.post(URL,{action:'abortBackup'});
     });
 }
-
+function showCredits() {
+  myAlert("CA Appdata Backup/Restore","<?=$caCredits?>","/plugins/<?=$plugin?>/images/ca.backup.png","96x96", true, false, true);
+}
 </script>
 <style>
 
@@ -532,6 +547,7 @@ jQuery(document).ready(function() {
 .fileTree{width:305px;max-height:150px;overflow:scroll;position:absolute;z-index:100;display:none;}
 </style>
 <link type="text/css" rel="stylesheet" href="/webGui/styles/jquery.filetree.css">
+<div id='upgradeAvailable' style='display:none'><center> <font color='red'>An update to CA Cleanup Appdata is Available. Click <a href='/Plugins'>HERE</a> to install the update</center></font></div>
 
 > For help with this plugin, click here (a new tab will open with the help file)  <strong><font size="2"><a href="Settings/caHelp#backupSettings" target="_blank">HELP</a></font></strong>
 
@@ -721,7 +737,7 @@ jQuery(document).ready(function() {
 <input type='button' value='Apply' id='Apply' onclick='apply();'><input type='button' value='Backup Now' id='Backup' onclick='backupNow();'><span class='statusLines'></span>
 </div><br>
 
-
+<a href="Settings/caHelp" target='_blank'>CA Manual</a><a style='float:right;cursor:pointer' onclick='showCredits();'>Credits</a><br><br></span>
 <center>For support for this plugin, visit here: <a href="http://lime-technology.com/forum/index.php?topic=40262.0" target="_blank">http://lime-technology.com/forum/index.php?topic=40262.0</a></center>
 
 > <center><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7M7CBCVU732XG' target='_blank'><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"></a></center>
