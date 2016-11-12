@@ -241,12 +241,12 @@ file_put_contents($communityPaths['backupLog'],"Backup/Restore Complete.  Rsync 
 
 switch ($backupOptions['logBackup']) {
   case 'yes':
-    toDOS($communityPaths['backupLog'],"/boot/config/plugins/community.applications/backup.log");
-    $logMessage = " - Log is available on the flash drive at /config/plugins/community.applications/backup.log";
+    toDOS($communityPaths['backupLog'],"/boot/config/plugins/ca.backup/backup.log");
+    $logMessage = " - Log is available on the flash drive at /config/plugins/ca.backup/backup.log";
     break;
   case 'append':
-    toDOS($communityPaths['backupLog'],"/boot/config/plugins/community.applications/backup.log",true);
-    $logMessage = " - Log is available on the flash drive at /config/plugins/community.applications/backup.log";
+    toDOS($communityPaths['backupLog'],"/boot/config/plugins/ca.backup/backup.log",true);
+    $logMessage = " - Log is available on the flash drive at /config/plugins/ca.backup/backup.log";
     break;
   case 'no':
     $logMessage = "";
