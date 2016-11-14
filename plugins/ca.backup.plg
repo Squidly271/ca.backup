@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2016.11.11a">
-<!ENTITY md5       "8758959d9affbfd3c33707e458afd67d">
+<!ENTITY version   "2016.11.14">
+<!ENTITY md5       "7dd5a1ed413a5edadff846b8798d9e19">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2016.11.14
+- Support CA Docker Autostart Manager settings (if installed)
+
 ###2016.11.11
 - Initial Separated Release
 

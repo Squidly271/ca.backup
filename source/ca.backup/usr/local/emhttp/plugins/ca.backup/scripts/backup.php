@@ -211,11 +211,36 @@ if ( $backupOptions['runRsync'] == "true" ) {
 }
 
 if ( is_array($dockerRunning) ) {
+  $autostart = readJsonFile("/boot/config/plugins/ca.docker.autostart/settings.json");
   foreach ($dockerRunning as $docker) {
     if ($docker['Running']) {
+      $autostartIndex = searchArray($autostart,"name",$docker['Name']);
+      if ( $autostartIndex !== false ) {
+        continue;
+      }
       logger("Restarting ".$docker['Name']);
       file_put_contents($communityPaths['backupLog'],"Restarting ".$docker['Name']."\n",FILE_APPEND);
       shell_exec("docker start ".$docker['Name']);
+    }
+  }
+  if ( $autostart ) {
+    foreach ($autostart as $docker) {
+      $index = searchArray($dockerRunning,"Name",$docker['name']);
+      if ( $index === false ) {
+        continue;
+      }
+      if ( $dockerRunning[$index]['Running'] ) {
+        $delay = $docker['delay'];
+        if ( ! $delay ) {
+          $delay = 0;
+        }
+        logger("Sleeping $delay seconds before starting ".$docker['name']);
+        file_put_contents($communityPaths['backupLog'],"Sleeping $delay seconds before starting ".$docker['name']."\n",FILE_APPEND);
+        sleep($delay);
+        logger("Restarting ".$docker['name']);
+        file_put_contents($communityPaths['backupLog'],"Restarting ".$docker['name']."\n",FILE_APPEND);
+        shell_exec("docker start ".$docker['name']);         
+      }
     }
   }
 }

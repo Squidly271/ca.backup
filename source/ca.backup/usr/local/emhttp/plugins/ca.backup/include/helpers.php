@@ -62,7 +62,31 @@ function dirContents($path) {
   return array_diff($dirContents,array(".",".."));
 }
 
+###############################################
+#                                             #
+# Search array for a particular key and value #
+# returns the index number of the array       #
+# return value === false if not found         #
+#                                             #
+###############################################
 
+function searchArray($array,$key,$value) {
+  if ( ! is_array($array) ) {
+    return false;
+  }
+  if ( function_exists("array_column") && function_exists("array_search") ) {   # faster to use built in if it works
+    $result = array_search($value, array_column($array, $key));   
+  } else {
+    $result = false;
+    for ($i = 0; $i <= max(array_keys($array)); $i++) {
+      if ( $array[$i][$key] == $value ) {
+        $result = $i;
+        break;
+      }
+    }
+  }
+  return $result;
+}
 
 ###################################################################################
 #                                                                                 #
