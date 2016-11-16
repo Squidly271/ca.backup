@@ -185,6 +185,10 @@ if ( $restore ) {
         }
       }
     }
+    if (is_dir("/etc/libvirt/qemu/nvram") ) {
+      exec("mkdir -p '$xmlDestination/nvram'");
+      exec("cp /etc/libvirt/qemu/nvram/* '$xmlDestination/nvram/'");
+    }
   }
 }
 if ( $backupOptions['dockerIMG'] == "exclude" ) {
