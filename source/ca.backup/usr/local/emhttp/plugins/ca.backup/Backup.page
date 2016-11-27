@@ -43,6 +43,10 @@ if ( $installedVersion < $upgradeVersion ) {
   $upgradeAvailable = "true";
 }
 
+if ( is_file("/var/log/plugins/ca.update.applications.plg") ) {
+  $caUpdateInstalled = "true";
+}
+
 $backupOptions = json_decode(@file_get_contents("/boot/config/plugins/ca.backup/BackupOptions.json"),true);
 if ( ! isset($backupOptions['rsyncOption']) ) {  $backupOptions['rsyncOption'] = "-avXHq --delete"; }
 if ( ! isset($backupOptions['cronSetting']) ) {  $backupOptions['cronSetting'] = "disabled"; }
@@ -60,6 +64,7 @@ if ( ! isset($backupOptions['fasterRsync']) )  { $backupOptions['fasterRsync'] =
 if ( ! isset($backupOptions['backupFlash']) ) { $backupOptions['backupFlash'] = "appdata"; }
 if ( ! isset($backupOptions['backupXML']) ) { $backupOptions['backupXML'] = "appdata"; }
 if ( ! isset($backupOptions['logBackup']) ) { $backupOptions['logBackup'] = "no"; }
+if ( ! isset($backupOptions['updateApps']) ) { $backupOptions['updateApps'] = "no"; }
 
 # fix logBackup due to my oops
 
@@ -245,6 +250,10 @@ $(function() {
   $("#usbDestination").val("<?=$backupOptions['usbDestination']?>");
   $("#backupXML").val("<?=$backupOptions['backupXML']?>");
   $("#xmlDestination").val("<?=$backupOptions['xmlDestination']?>");
+  $("#updateApps").val("<?=$backupOptions['updateApps']?>");
+  if ( "<?=$caUpdateInstalled?>" != "true" ) {
+    $("#updateApps").prop("disabled",true);
+  }
   
   $("#destinationShare, #startScript, #stopScript, #usbDestination, #xmlDestination").fileTreeAttach();
 $('#source').fileTreeAttach();
@@ -620,6 +629,14 @@ jQuery(document).ready(function() {
   <td><input onchange='validateOptions();' class='setting' id='startScript' type='text' data-pickroot="/" data-pickfolders="true"></input></td>
 </tr>
 <tr>
+  <td><b>Update Applications On Restart?</b><br><font size='0'>This option requires CA Update Applications to be installed</font></td>
+  <td><select class='setting' id='updateApps' onchange='validateOptions();'>
+    <option value='no'>No</option>
+    <option value='yes'>Yes</option>
+    </select>
+  </td>
+</tr>
+<tr>
   <td><b>Rsync Options:</b><br><font size='0'>Don't change if you don't know what you're doing</font></td>
   <td><input class='setting' id='rsyncOption' type='text' value='<?=$backupOptions['rsyncOption']?>' onchange='validateOptions();'></td>
 </tr>
@@ -738,7 +755,7 @@ jQuery(document).ready(function() {
 </div><br>
 
 <a href="Settings/caHelp" target='_blank'>CA Manual</a><a style='float:right;cursor:pointer' onclick='showCredits();'>Credits</a><br><br></span>
-<center>For support for this plugin, visit here: <a href="http://lime-technology.com/forum/index.php?topic=40262.0" target="_blank">http://lime-technology.com/forum/index.php?topic=40262.0</a></center>
+<center>For support for this plugin, visit here: <a href="http://lime-technology.com/forum/index.php?topic=53694.0" target="_blank">http://lime-technology.com/forum/index.php?topic=53694.0</a></center>
 
 > <center><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7M7CBCVU732XG' target='_blank'><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"></a></center>
 

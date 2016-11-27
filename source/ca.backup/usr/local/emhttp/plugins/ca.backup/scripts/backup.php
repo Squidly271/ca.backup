@@ -213,7 +213,10 @@ if ( $backupOptions['runRsync'] == "true" ) {
   exec($command,$output,$returnValue);
   logger("$restoreMsg Complete");
 }
-
+if ( $backupOptions['updateApps'] == "yes" && is_file("/var/log/plugins/ca.update.applications.plg") ) {
+  file_put_contents($communityPaths['backupLog'],"Searching for updates to docker applications\n",FILE_APPEND);
+  exec("/usr/local/emhttp/plugins/ca.update.applications/scripts/updateDocker.php");
+}
 if ( is_array($dockerRunning) ) {
   $autostart = readJsonFile("/boot/config/plugins/ca.docker.autostart/settings.json");
   foreach ($dockerRunning as $docker) {
