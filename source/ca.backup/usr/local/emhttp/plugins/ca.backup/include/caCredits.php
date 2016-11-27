@@ -28,6 +28,11 @@ $caCredits = "
         <td><strong>Andrew Zawadzki</strong></td>
         <td>Main Development</td>
       </tr>
+      <tr>
+        <td><img src='http://i.imgur.com/hpBxTJX.jpg' width='48px' height='48px'></td>
+        <td><strong>CHBMB</strong></td>
+        <td>Additional Assistance</td>
+      </tr>
     </table></center>
     <br>
     <center><em><font size='1'>Copyright 2015-2016 Andrew Zawadzki</font></em></center>

@@ -148,12 +148,18 @@ case 'validateBackupOptions':
 
 case 'applyBackupOptions':
   $rawSettings = getPostArray('settings');
+  $dontStop = getPostArray('dontStop');
+  $dontKeys = array_keys($dontStop);
+  foreach ($dontStop as $key) {
+    $donotStop[$key] = "true";
+  }
   foreach ($rawSettings as $setting) {
     $backupOptions[$setting[0]] = $setting[1];
   }
   $backupOptions['excluded'] = trim($backupOptions['excluded']);
   $backupOptions['destinationShare'] = str_replace("/mnt/user/","",$backupOptions['destinationShare']);  # make new options conform to old layout of json
   $backupOptions['destinationShare'] = rtrim($backupOptions['destinationShare'],'/');
+  $backupOptions['dontStop'] = $donotStop;
   writeJsonFile($communityPaths['backupOptions'],$backupOptions);
   exec($communityPaths['addCronScript']);
   break; 

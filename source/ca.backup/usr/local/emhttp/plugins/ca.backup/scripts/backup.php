@@ -65,8 +65,8 @@ $dockerClient = new DockerClient();
 $dockerRunning = $dockerClient->getDockerContainers();
 
 $backupOptions = readJsonFile($communityPaths['backupOptions']);
-
 if ( ! $backupOptions ) {
+  @unlink($communityPaths['backupProgress']);
   exit;
 }
 
@@ -127,6 +127,11 @@ if ( $backupOptions['stopScript'] ) {
 if ( is_array($dockerRunning) ) {
   foreach ($dockerRunning as $docker) {
     if ($docker['Running']) {
+      if ( $backupOptions['dontStop'][$docker['Name']] ) {
+        logger($docker['Name']." set to not be stopped by ca backup's advanced settings.  Skipping");
+        file_put_contents($communityPaths['backupLog'],$docker['Name']." set to not be stopped by ca backup's advanced settings.  Skipping\n",FILE_APPEND);
+        continue;
+      }
       logger("Stopping ".$docker['Name']);
       file_put_contents($communityPaths['backupLog'],"Stopping ".$docker['Name']."\n",FILE_APPEND);
       shell_exec("docker stop ".$docker['Name']);
@@ -221,6 +226,9 @@ if ( is_array($dockerRunning) ) {
   $autostart = readJsonFile("/boot/config/plugins/ca.docker.autostart/settings.json");
   foreach ($dockerRunning as $docker) {
     if ($docker['Running']) {
+      if ( $backupOptions['dontStop'][$docker['Name']] ) {
+        continue;
+      }
       $autostartIndex = searchArray($autostart,"name",$docker['Name']);
       if ( $autostartIndex !== false ) {
         continue;
@@ -234,6 +242,9 @@ if ( is_array($dockerRunning) ) {
     foreach ($autostart as $docker) {
       $index = searchArray($dockerRunning,"Name",$docker['name']);
       if ( $index === false ) {
+        continue;
+      }
+      if ( $backupOptions['dontStop'][$docker['name']] ) {
         continue;
       }
       if ( $dockerRunning[$index]['Running'] ) {
