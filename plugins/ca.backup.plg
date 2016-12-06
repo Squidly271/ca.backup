@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2016.11.27">
-<!ENTITY md5       "41145df6ef2f142a11df04e53b67eadb">
+<!ENTITY version   "2016.12.05">
+<!ENTITY md5       "d95afa75c9a0264fd329208cc2d5088f">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2016.12.05
+- Fixed: Under certain cicumstances unable to powerdown if a backup/restore was in progress
+
 ###2016.11.27
 - Option to run CA Auto Update (if installed) after a backup is completed to install any available updates
 - Ability to specify to not shutdown certain apps when backing up - Advanced
