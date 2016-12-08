@@ -96,9 +96,7 @@ $sharesList = array();
 $disksList = array();
 $userSharesAllowed = version_compare($unRaidVersion,"6.2.0-rc3",">=") || version_compare($unRaidVersion,"6.2",">=");
 
-if ( $userSharesAllowed ) {
-  $disksDisallowed = $userSharesAllowed ? array(".","..","user0","disks","cache") : array(".","..","user","user0","disks","cache");
-}
+$disksDisallowed = $userSharesAllowed ? array(".","..","user0","disks","cache") : array(".","..","user","user0","disks","cache");
 
 if ( is_dir("/mnt/user") )  { $destinationShareList = array_diff(scandir("/mnt/user"),array(".","..")); }
 if ( is_dir("/mnt/disks") ) { $udList = array_diff(scandir("/mnt/disks"),array(".","..")); }
