@@ -84,6 +84,8 @@ function deleteDatedBackup() {
 }
 </script>
 
+> For help with this plugin, click here (a new tab will open with the help file)  <strong><font size="2"><a href="Settings/caHelp#backupSettings" target="_blank">HELP</a></font></strong>
+
 <table>
 <tr>
   <td>This script will delete ALL of your old backup sets.  This is useful when transitioning from non-dated backup sets to dated backup sets and vice-versa</td>
