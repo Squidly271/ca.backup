@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2016.12.18a">
-<!ENTITY md5       "79fc9747efffebe3f6533bdee92d0bb0">
+<!ENTITY version   "2017.01.08">
+<!ENTITY md5       "485b014671b9c4c0022b8af2fd1b8caa">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2017.01.08
+- Fixed: Under certain circumstances the logging could incorrectly go into the syslog
+
 ###2016.12.18
 - Force tabbed mode on settings
 

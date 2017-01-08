@@ -3,6 +3,8 @@
 require_once("/usr/local/emhttp/plugins/ca.backup/include/paths.php");
 require_once("/usr/local/emhttp/plugins/ca.backup/include/helpers.php");
 
+exec("mkdir -p /var/lib/docker/unraid/ca.backup.datastore/");
+
 $backupOptions = readJsonFile($communityPaths['backupOptions']);
 if ( ! $backupOptions['destinationShare']) {
   exit;

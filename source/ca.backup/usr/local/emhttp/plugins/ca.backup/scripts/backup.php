@@ -18,6 +18,8 @@ require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerCli
 require_once("/usr/local/emhttp/plugins/ca.backup/include/paths.php");
 require_once("/usr/local/emhttp/plugins/ca.backup/include/helpers.php");
 
+exec("mkdir -p ".$communityPaths['backupLog']);
+
 function getRsyncReturnValue($returnValue) {
   $returnMessage[0] = "Success";
   $returnMessage[1] = "Syntax or usage error";
