@@ -18,7 +18,8 @@ require_once("/usr/local/emhttp/plugins/dynamix.docker.manager/include/DockerCli
 require_once("/usr/local/emhttp/plugins/ca.backup/include/paths.php");
 require_once("/usr/local/emhttp/plugins/ca.backup/include/helpers.php");
 
-exec("mkdir -p ".$communityPaths['backupLog']);
+exec("rm -rf ".$communityPaths['backupLog']);
+exec("mkdir -p /var/lib/docker/unraid/ca.backup.datastore");
 
 function getRsyncReturnValue($returnValue) {
   $returnMessage[0] = "Success";

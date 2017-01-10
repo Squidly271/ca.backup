@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2017.01.08">
-<!ENTITY md5       "485b014671b9c4c0022b8af2fd1b8caa">
+<!ENTITY version   "2017.01.09">
+<!ENTITY md5       "fc9de948ee275aad2d60a86f9bdcc1e2">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2017.01.09
+- Fixed: Under certain circumstances the logging could incorrectly go into the syslog
+
 ###2017.01.08
 - Fixed: Under certain circumstances the logging could incorrectly go into the syslog
 
