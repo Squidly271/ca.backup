@@ -255,12 +255,34 @@ if ( is_array($dockerRunning) ) {
         if ( ! $delay ) {
           $delay = 0;
         }
-        logger("Sleeping $delay seconds before starting ".$docker['name']);
-        file_put_contents($communityPaths['backupLog'],"Sleeping $delay seconds before starting ".$docker['name']."\n",FILE_APPEND);
-        sleep($delay);
-        logger("Restarting ".$docker['name']);
-        file_put_contents($communityPaths['backupLog'],"Restarting ".$docker['name']."\n",FILE_APPEND);
-        shell_exec("docker start ".$docker['name']);         
+        $containerName = $docker['name'];
+        $containerDelay = $docker['delay'];
+        $containerPort = $docker['port'];
+        if ( $docker['port'] ) {
+          logger("Restarting $containerName");
+          file_put_contents($communityPaths['backupLog'],"Restarting $containerName",FILE_APPEND);
+          exec("docker start $containerName");
+          logger("Waiting for port $containerPort to be available before continuing... Timeout of $containerDelay seconds");
+          file_put_contents($communityPaths['backupLog'],"Waiting for port $containerPort to be available before continuing... Timeout of $containerDelay seconds",FILE_APPEND);
+          for ($time = 0; $time < $containerDelay; $time++) {
+            $output = exec("lsof -Pi :$containerPort");
+            if ($output) {
+              break;
+            }
+            sleep(1);
+          }
+          if ( $output ) {
+            logger("$containerPort still not available.  Carrying on.");
+            file_put_contents($communityPaths['backupLog'],"$containerPort still not available.  Carrying on.",FILE_APPEND);
+          }
+        } else {
+          logger("Sleeping $delay seconds before starting ".$docker['name']);
+          file_put_contents($communityPaths['backupLog'],"Sleeping $delay seconds before starting ".$docker['name']."\n",FILE_APPEND);
+          sleep($delay);
+          logger("Restarting ".$docker['name']);
+          file_put_contents($communityPaths['backupLog'],"Restarting ".$docker['name']."\n",FILE_APPEND);
+          shell_exec("docker start ".$docker['name']);         
+        }
       }
     }
   }
