@@ -271,7 +271,7 @@ if ( is_array($dockerRunning) ) {
             }
             sleep(1);
           }
-          if ( $output ) {
+          if ( ! $output ) {
             logger("$containerPort still not available.  Carrying on.");
             file_put_contents($communityPaths['backupLog'],"$containerPort still not available.  Carrying on.",FILE_APPEND);
           }
