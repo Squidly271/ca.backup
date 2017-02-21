@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2017.02.19a">
-<!ENTITY md5       "4519af0d3bf85cf683661faf53fdd29a">
+<!ENTITY version   "2017.02.21">
+<!ENTITY md5       "f096b50747115d4de2d66c5e15e30b8a">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2017.02.21
+- Changed port available criteria on restarting to be more accurate and support IP address
+
 ###2017.02.19
 - Added: Support for CA Docker Autostart's wait for port feature
 

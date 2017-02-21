@@ -242,6 +242,8 @@ if ( is_array($dockerRunning) ) {
     }
   }
   if ( $autostart ) {
+    $networkINI = parse_ini_file("/usr/local/emhttp/state/network.ini",true);
+    $defaultIP = $networkINI['eth0']['IPADDR:0'];
     foreach ($autostart as $docker) {
       $index = searchArray($dockerRunning,"Name",$docker['name']);
       if ( $index === false ) {
@@ -258,22 +260,29 @@ if ( is_array($dockerRunning) ) {
         $containerName = $docker['name'];
         $containerDelay = $docker['delay'];
         $containerPort = $docker['port'];
+        $containerIP = $docker['IP'];
+        if ( ! $containerIP ) {
+          $containerIP = $defaultIP;
+        }
+        if ( ! $containerIP ) {
+          unset($containerPort);
+        }
         if ( $docker['port'] ) {
           logger("Restarting $containerName");
-          file_put_contents($communityPaths['backupLog'],"Restarting $containerName",FILE_APPEND);
+          file_put_contents($communityPaths['backupLog'],"Restarting $containerName\n",FILE_APPEND);
           exec("docker start $containerName");
           logger("Waiting for port $containerPort to be available before continuing... Timeout of $containerDelay seconds");
-          file_put_contents($communityPaths['backupLog'],"Waiting for port $containerPort to be available before continuing... Timeout of $containerDelay seconds",FILE_APPEND);
+          file_put_contents($communityPaths['backupLog'],"Waiting for port $containerIP:$containerPort to be available before continuing... Timeout of $containerDelay seconds\n",FILE_APPEND);
           for ($time = 0; $time < $containerDelay; $time++) {
-            $output = exec("lsof -Pi :$containerPort");
-            if ($output) {
+            exec("echo test 2>/dev/null > /dev/tcp/$containerIP/$containerPort",$output,$error);
+            if ( ! $error) {
               break;
             }
             sleep(1);
           }
-          if ( ! $output ) {
+          if ( $error ) {
             logger("$containerPort still not available.  Carrying on.");
-            file_put_contents($communityPaths['backupLog'],"$containerPort still not available.  Carrying on.",FILE_APPEND);
+            file_put_contents($communityPaths['backupLog'],"$containerPort still not available.  Carrying on.\n",FILE_APPEND);
           }
         } else {
           logger("Sleeping $delay seconds before starting ".$docker['name']);
