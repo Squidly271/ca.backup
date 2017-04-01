@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2017.02.21">
-<!ENTITY md5       "f096b50747115d4de2d66c5e15e30b8a">
+<!ENTITY version   "2017.04.01">
+<!ENTITY md5       "7537d95daea22b4787e851f14f75d189">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2017.04.01
+- Add in ability to run at differing 'nice' levels
+
 ###2017.02.21
 - Changed port available criteria on restarting to be more accurate and support IP address
 

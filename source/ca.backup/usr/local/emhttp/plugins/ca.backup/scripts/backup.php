@@ -215,6 +215,9 @@ if ( $backupOptions['runRsync'] == "true" ) {
   $logLine = $restore ? "Restoring " : "Backing Up";
   logger("$logLine appData from $source to $destination");
   $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' '.$dockerIMGFilter.' '.$rsyncExcluded.' --log-file="'.$communityPaths['backupLog'].'" "'.$source.'" "'.$destination.'" > /dev/null 2>&1';
+  if ( is_file("/boot/config/plugins/ca.backup/nice") ) {
+    $command = trim(file_get_contents("/boot/config/plugins/ca.backup/nice"))." $command";
+  }
   logger('Using command: '.$command);
   file_put_contents($communityPaths['backupLog'],"Executing rsync: $command\n",FILE_APPEND);
   exec("mkdir -p ".escapeshellarg($destination));
@@ -361,7 +364,11 @@ if ( ! $restore && ($backupOptions['datedBackup'] == 'yes') ) {
           logger("Deleting $basePathBackup/$dir");
           file_put_contents($communityPaths['backupLog'],"Deleting Dated Backup set: $basePathBackup/$dir\n",FILE_APPEND);
           exec("echo Deleting $basePathBackup/$dir >> ".$communityPaths['backupLog']."\n");
-          exec('rm -rf '.escapeshellarg($basePathBackup).'/'.$dir);
+          $command = 'rm -rf '.escapeshellarg($basePathBackup).'/'.$dir;
+          if ( is_file("/boot/config/plugins/ca.backup/nice") ) {
+            $command = trim(file_get_contents("/boot/config/plugins/ca.backup/nice"))." $command";
+          }
+          exec($command);
         }   
       }
     }
