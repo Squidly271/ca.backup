@@ -84,6 +84,7 @@ $basePathBackup = $backupOptions['destination']."/".$backupOptions['destinationS
 if ( ! $backupOptions['dockerIMG'] )     { $backupOptions['dockerIMG'] = "exclude"; }
 if ( ! $backupOptions['notification'] )  { $backupOptions['notification'] = "always"; }
 if ( ( $backupOptions['deleteOldBackup'] == "" ) || ( $backupOptions['deleteOldBackup'] == "0" ) ) { $backupOptions['fasterRsync'] = "no"; }
+if ( ! $backupOptions['dockerStopDelay'] ) { $backupOptions['dockerStopDelay'] = 10; }
 
 if ( $restore ) {
   if ( $backupOptions['datedBackup'] == "yes" ) {
@@ -137,7 +138,8 @@ if ( is_array($dockerRunning) ) {
       }
       logger("Stopping ".$docker['Name']);
       file_put_contents($communityPaths['backupLog'],"Stopping ".$docker['Name']."\n",FILE_APPEND);
-      shell_exec("docker stop ".$docker['Name']);
+      shell_exec("docker stop -t {$backupOptions['dockerStopDelay']} {$docker['Name']}");
+      logger("docker stop -t {$backupOptions['dockerStopDelay']} {$docker['Name']}");
     }
   }
 }

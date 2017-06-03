@@ -77,6 +77,7 @@ if ( ! isset($backupOptions['backupFlash']) ) { $backupOptions['backupFlash'] = 
 if ( ! isset($backupOptions['backupXML']) ) { $backupOptions['backupXML'] = "appdata"; }
 if ( ! isset($backupOptions['logBackup']) ) { $backupOptions['logBackup'] = "no"; }
 if ( ! isset($backupOptions['updateApps']) ) { $backupOptions['updateApps'] = "no"; }
+if ( ! isset($backupOptions['dockerStopDelay']) ) { $backupOptions['dockerStopDelay'] = 10; }
 
 # fix logBackup due to my oops
 
@@ -292,6 +293,8 @@ $(function() {
   $("#backupXML").val("<?=$backupOptions['backupXML']?>");
   $("#xmlDestination").val("<?=$backupOptions['xmlDestination']?>");
   $("#updateApps").val("<?=$backupOptions['updateApps']?>");
+  $("#dockerStopDelay").val("<?=$backupOptions['dockerStopDelay']?>");
+  
   if ( "<?=$caUpdateInstalled?>" != "true" ) {
     $("#updateApps").prop("disabled",true);
   }
@@ -708,6 +711,11 @@ jQuery(document).ready(function() {
     <option value='no'>No</option>
     <option value='yes'>Yes</option>
     </select>
+  </td>
+</tr>
+<tr>
+  <td><b>Time to wait when stopping app before killing:</b></td>
+  <td><input type='number' class='setting narrow' id='dockerStopDelay' onchange='validateOptions();'>
   </td>
 </tr>
 <tr>
