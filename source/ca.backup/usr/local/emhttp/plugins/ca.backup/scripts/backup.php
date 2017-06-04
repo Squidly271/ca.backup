@@ -4,7 +4,7 @@
 #                                                             #
 # Community Applications copyright 2015-2016, Andrew Zawadzki #
 #                                                             #
-###############################################################
+############################################################### 
 
 if ( $argv[1] == "restore" ) {
   $restore = true;
@@ -172,18 +172,26 @@ if ( $restore ) {
       $txt .= "Disk: ".$Disk['name']."  Device: ".$Disk['id']."  Status: ".$Disk['status']."\r\n";
     }
     file_put_contents("/boot/config/DISK_ASSIGNMENTS.txt",$txt);
-    exec("cp /boot/* '$usbDestination' -R -v");
-
+    $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' --log-file="'.$communityPaths['backupLog'].'" /boot/ "'.$usbDestination.'" > /dev/null 2>&1';
+    logger("Using command: $command");
+    exec($command);
+    
     exec("mv '$usbDestination/config/super.dat' '$usbDestination/config/super.dat.CA_BACKUP'");
   }
   if ( $backupOptions['backupXML'] != "no" ) {
-    logger("Deleting Old XML Backup");
-    if ( is_dir("/etc/libvirt/qemu") ) {
-      exec("rm -rf '$xmlDestination'");
-    }
     logger("Backing up VM XML's to $xmlDestination");
     file_put_contents($communityPaths['backupLog'],"Backing up VM XML's\n",FILE_APPEND);
     exec("mkdir -p '$xmlDestination'");
+
+    $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' --log-file="'.$communityPaths['backupLog'].'" /etc/libvirt/qemu/ "'.$xmlDestination.'" > /dev/null 2>&1';
+
+    
+/*     if (is_dir("/etc/libvirt/qemu/nvram") ) {
+      exec("mkdir -p '$xmlDestination/nvram'");
+      $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' --log-file="'.$communityPaths['backupLog'].'" /etc/libvirt/qemu/nvram "'.$xmlDestination.'" > /dev/null 2>&1';
+      logger("Using command: $command");
+      exec($command);
+    }
     $xmlList = @scandir("/etc/libvirt/qemu");
     if ( is_array($xmlList) ) {
       foreach ($xmlList as $xml) {
@@ -194,11 +202,7 @@ if ( $restore ) {
           exec("todos < '/etc/libvirt/qemu/$xml' > '$xmlDestination/$xml'");
         }
       }
-    }
-    if (is_dir("/etc/libvirt/qemu/nvram") ) {
-      exec("mkdir -p '$xmlDestination/nvram'");
-      exec("cp /etc/libvirt/qemu/nvram/* '$xmlDestination/nvram/'");
-    }
+    } */
   }
 }
 if ( $backupOptions['dockerIMG'] == "exclude" ) {

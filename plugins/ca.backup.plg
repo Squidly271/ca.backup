@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "ca.backup">
 <!ENTITY author    "Andrew Zawadzki">
-<!ENTITY version   "2017.04.01">
-<!ENTITY md5       "7537d95daea22b4787e851f14f75d189">
+<!ENTITY version   "2017.06.04">
+<!ENTITY md5       "2acabb2aa710b5d825788b748a3f2d7e">
 <!ENTITY launch    "Settings/BackupMain">
 <!ENTITY plugdir   "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github    "Squidly271/ca.backup">
@@ -13,6 +13,10 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
 
 <CHANGES>
+###2017.06.04
+- Preserve file modification times on XML and Flash backup
+- Add in support for time before forcibly killing a docker process during stop process (default: 10 seconds)
+
 ###2017.04.01
 - Add in ability to run at differing 'nice' levels
 
