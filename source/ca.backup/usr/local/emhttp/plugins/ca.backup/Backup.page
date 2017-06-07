@@ -675,7 +675,7 @@ jQuery(document).ready(function() {
   <td><input type='text' class='setting' id="usbDestination" name="usb destination" value="" placeholder='select a destination' data-pickfilter="HIDE_FILES_FILTER" data-pickroot="/mnt/" data-pickfolders="true" onchange='validateOptions();'></td>
 </tr>
 <tr>
-  <td><b>Backup VM XML's:</b></td>
+  <td><b>Backup libvirt.img?</b></td>
   <td><select class='setting' id='backupXML' onchange='validateOptions();'>
     <option value='appdata'>Same Destination as Appdata</option>
     <option value='separate'>Separate Destination</option>
@@ -684,7 +684,7 @@ jQuery(document).ready(function() {
   </td>
 </tr>
 <tr>
-  <td><b>VM XML Destination:<b><br>See Manual</td>
+  <td><b>libvirt.img Destination:<b></td>
   <td><input type='text' class='setting' id="xmlDestination" name="xml destination" value="" placeholder='select a destination' data-pickfilter="HIDE_FILES_FILTER" data-pickroot="/mnt/" data-pickfolders="true" onchange='validateOptions();'></td>
 </tr>
 <tr>

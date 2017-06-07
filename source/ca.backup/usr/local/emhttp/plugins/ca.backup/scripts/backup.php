@@ -21,6 +21,12 @@ require_once("/usr/local/emhttp/plugins/ca.backup/include/helpers.php");
 exec("rm -rf ".$communityPaths['backupLog']);
 exec("mkdir -p /var/lib/docker/unraid/ca.backup.datastore");
 
+function backupLog($msg) {
+  global $communityPaths;
+  
+  file_put_contents($communityPaths['backupLog'],"$msg\n",FILE_APPEND);
+}
+
 function getRsyncReturnValue($returnValue) {
   $returnMessage[0] = "Success";
   $returnMessage[1] = "Syntax or usage error";
@@ -125,7 +131,7 @@ if ( $backupOptions['notification'] == "always" ) {
   
 if ( $backupOptions['stopScript'] ) {
   logger("executing custom stop script ".$backupOptions['stopScript']);
-  file_put_contents($communityPaths['backupLog'],"Executing custom stop script\n",FILE_APPEND);
+  backupLog("Executing custom stop script");
   shell_exec($backupOptions['stopScript']." >> ".$communityPaths['backupLog']);
 }
 if ( is_array($dockerRunning) ) {
@@ -133,11 +139,11 @@ if ( is_array($dockerRunning) ) {
     if ($docker['Running']) {
       if ( $backupOptions['dontStop'][$docker['Name']] ) {
         logger($docker['Name']." set to not be stopped by ca backup's advanced settings.  Skipping");
-        file_put_contents($communityPaths['backupLog'],$docker['Name']." set to not be stopped by ca backup's advanced settings.  Skipping\n",FILE_APPEND);
+        backupLog($docker['Name']." set to not be stopped by ca backup's advanced settings.  Skipping");
         continue;
       }
       logger("Stopping ".$docker['Name']);
-      file_put_contents($communityPaths['backupLog'],"Stopping ".$docker['Name']."\n",FILE_APPEND);
+      backupLog("Stopping ".$docker['Name']);
       shell_exec("docker stop -t {$backupOptions['dockerStopDelay']} {$docker['Name']}");
       logger("docker stop -t {$backupOptions['dockerStopDelay']} {$docker['Name']}");
     }
@@ -164,7 +170,7 @@ if ( $restore ) {
     logger("Deleting Old USB Backup");
     exec("rm -rf '$usbDestination'");
     logger("Backing up USB Flash drive config folder to $usbDestination");
-    file_put_contents($communityPaths['backupLog'],"Backing up USB Flash Drive\n",FILE_APPEND);
+    backupLog("Backing up USB Flash Drive");
     exec("mkdir -p '$usbDestination'");
     $availableDisks = my_parse_ini_file("/var/local/emhttp/disks.ini",true);
     $txt .= "Disk Assignments as of ".date(DATE_RSS)."\r\n";
@@ -179,30 +185,15 @@ if ( $restore ) {
     exec("mv '$usbDestination/config/super.dat' '$usbDestination/config/super.dat.CA_BACKUP'");
   }
   if ( $backupOptions['backupXML'] != "no" ) {
-    logger("Backing up VM XML's to $xmlDestination");
-    file_put_contents($communityPaths['backupLog'],"Backing up VM XML's\n",FILE_APPEND);
+    logger("Backing up libvirt.img to $xmlDestination");
+    backupLog("Backing up libvirt.img");
     exec("mkdir -p '$xmlDestination'");
-
-    $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' --log-file="'.$communityPaths['backupLog'].'" /etc/libvirt/qemu/ "'.$xmlDestination.'" > /dev/null 2>&1';
-
-    
-/*     if (is_dir("/etc/libvirt/qemu/nvram") ) {
-      exec("mkdir -p '$xmlDestination/nvram'");
-      $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' --log-file="'.$communityPaths['backupLog'].'" /etc/libvirt/qemu/nvram "'.$xmlDestination.'" > /dev/null 2>&1';
-      logger("Using command: $command");
+    $domainCFG = @parse_ini_file("/boot/config/domain.cfg");
+    if ( is_file($domainCFG['IMAGE_FILE']) ) {
+      $command = '/usr/bin/rsync '.$backupOptions["rsyncOption"].' --log-file="'.$communityPaths["backupLog"].'" "'.$domainCFG["IMAGE_FILE"].'" "'.$xmlDestination.'" > /dev/null 2>&1';
       exec($command);
     }
-    $xmlList = @scandir("/etc/libvirt/qemu");
-    if ( is_array($xmlList) ) {
-      foreach ($xmlList as $xml) {
-        if (is_dir("/etc/libvirt/qemu/$xml")) {
-          continue;
-        }
-        if ( stripos($xml,".xml") ) {
-          exec("todos < '/etc/libvirt/qemu/$xml' > '$xmlDestination/$xml'");
-        }
-      }
-    } */
+    $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' --log-file="'.$communityPaths['backupLog'].'" /etc/libvirt/qemu/ "'.$xmlDestination.'" > /dev/null 2>&1';
   }
 }
 if ( $backupOptions['dockerIMG'] == "exclude" ) {
@@ -220,18 +211,19 @@ if ( $backupOptions['excluded'] ) {
 if ( $backupOptions['runRsync'] == "true" ) {
   $logLine = $restore ? "Restoring " : "Backing Up";
   logger("$logLine appData from $source to $destination");
+  backupLog("$logLine appData from $source to $destination");
   $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' '.$dockerIMGFilter.' '.$rsyncExcluded.' --log-file="'.$communityPaths['backupLog'].'" "'.$source.'" "'.$destination.'" > /dev/null 2>&1';
   if ( is_file("/boot/config/plugins/ca.backup/nice") ) {
     $command = trim(file_get_contents("/boot/config/plugins/ca.backup/nice"))." $command";
   }
   logger('Using command: '.$command);
-  file_put_contents($communityPaths['backupLog'],"Executing rsync: $command\n",FILE_APPEND);
+  backupLog("Executing rsync: $command");
   exec("mkdir -p ".escapeshellarg($destination));
   exec($command,$output,$returnValue);
   logger("$restoreMsg Complete");
 }
 if ( $backupOptions['updateApps'] == "yes" && is_file("/var/log/plugins/ca.update.applications.plg") ) {
-  file_put_contents($communityPaths['backupLog'],"Searching for updates to docker applications\n",FILE_APPEND);
+  backupLog("Searching for updates to docker applications");
   exec("/usr/local/emhttp/plugins/ca.update.applications/scripts/updateDocker.php");
 }
 if ( is_array($dockerRunning) ) {
@@ -246,7 +238,7 @@ if ( is_array($dockerRunning) ) {
         continue;
       }
       logger("Restarting ".$docker['Name']);
-      file_put_contents($communityPaths['backupLog'],"Restarting ".$docker['Name']."\n",FILE_APPEND);
+      backupLog("Restarting ".$docker['Name']);
       shell_exec("docker start ".$docker['Name']);
     }
   }
@@ -278,10 +270,10 @@ if ( is_array($dockerRunning) ) {
         }
         if ( $docker['port'] ) {
           logger("Restarting $containerName");
-          file_put_contents($communityPaths['backupLog'],"Restarting $containerName\n",FILE_APPEND);
+          backupLog("Restarting $containerName");
           exec("docker start $containerName");
           logger("Waiting for port $containerPort to be available before continuing... Timeout of $containerDelay seconds");
-          file_put_contents($communityPaths['backupLog'],"Waiting for port $containerIP:$containerPort to be available before continuing... Timeout of $containerDelay seconds\n",FILE_APPEND);
+          backupLog("Waiting for port $containerIP:$containerPort to be available before continuing... Timeout of $containerDelay seconds");
           for ($time = 0; $time < $containerDelay; $time++) {
             exec("echo test 2>/dev/null > /dev/tcp/$containerIP/$containerPort",$output,$error);
             if ( ! $error) {
@@ -291,14 +283,14 @@ if ( is_array($dockerRunning) ) {
           }
           if ( $error ) {
             logger("$containerPort still not available.  Carrying on.");
-            file_put_contents($communityPaths['backupLog'],"$containerPort still not available.  Carrying on.\n",FILE_APPEND);
+            backupLog("$containerPort still not available.  Carrying on.");
           }
         } else {
           logger("Sleeping $delay seconds before starting ".$docker['name']);
-          file_put_contents($communityPaths['backupLog'],"Sleeping $delay seconds before starting ".$docker['name']."\n",FILE_APPEND);
+          backupLog("Sleeping $delay seconds before starting ".$docker['name']);
           sleep($delay);
           logger("Restarting ".$docker['name']);
-          file_put_contents($communityPaths['backupLog'],"Restarting ".$docker['name']."\n",FILE_APPEND);
+          backupLog("Restarting ".$docker['name']);
           shell_exec("docker start ".$docker['name']);         
         }
       }
@@ -307,7 +299,7 @@ if ( is_array($dockerRunning) ) {
 }
 if ( $backupOptions['startScript'] ) {
   logger("Executing custom start script ".$backupOptions['startScript']);
-  file_put_contents($communityPaths['backupLog'],"Executing custom start script\n",FILE_APPEND);
+  backupLog("Executing custom start script");
   shell_exec($backupOptions['startScript']." >> ".$communityPaths['backupLog']);
 }
 logger('#######################');
@@ -323,7 +315,7 @@ if ( $returnValue > 0 ) {
   $type = "normal";
 }
 
-file_put_contents($communityPaths['backupLog'],"Backup/Restore Complete.  Rsync Status: $message\n",FILE_APPEND);
+backupLog("Backup/Restore Complete.  Rsync Status: $message");
 
 switch ($backupOptions['logBackup']) {
   case 'yes':
@@ -353,9 +345,9 @@ if ( ! $restore && ($backupOptions['datedBackup'] == 'yes') ) {
   if ( $backupOptions['deleteOldBackup'] ) {
     if ( $returnValue > 0 ) {
       logger("rsync returned errors.  Not deleting old backup sets of appdata");
-      file_put_contents($communityPaths['backupLog'],"rsync returned errors.  Not deleting old backup sets of appdata\n",FILE_APPEND);
+      backupLog("rsync returned errors.  Not deleting old backup sets of appdata");
       logger("Renaming $destination to $destination-error\n");
-      file_put_contents($communityPaths['backupLog'],"Renaming $destination to $destination-error\n",FILE_APPEND);
+      backupLog("Renaming $destination to $destination-error");
       
       exec("mv ".escapeshellarg("$destination")." ".escapeshellarg("$destination-error"));
     } else {
@@ -368,7 +360,7 @@ if ( ! $restore && ($backupOptions['datedBackup'] == 'yes') ) {
         $age = $interval->format("%R%a");
         if ( $age <= (0 - $backupOptions['deleteOldBackup']) ) {
           logger("Deleting $basePathBackup/$dir");
-          file_put_contents($communityPaths['backupLog'],"Deleting Dated Backup set: $basePathBackup/$dir\n",FILE_APPEND);
+          backupLog("Deleting Dated Backup set: $basePathBackup/$dir");
           exec("echo Deleting $basePathBackup/$dir >> ".$communityPaths['backupLog']."\n");
           $command = 'rm -rf '.escapeshellarg($basePathBackup).'/'.$dir;
           if ( is_file("/boot/config/plugins/ca.backup/nice") ) {
@@ -390,12 +382,12 @@ if ( ! startsWith($destination,"/mnt/user") ) {
       $shareCfg = file_get_contents($communityPaths['defaultShareConfig']);
     }
     $shareCfg = str_replace('shareUseCache="no"','shareUseCache="only"',$shareCfg);
-    file_put_contents($communityPaths['backupLog'],"Setting $shareName share to be cache-only\n",FILE_APPEND);
+    backupLog("Setting $shareName share to be cache-only");
     file_put_contents("/boot/config/shares/$shareName.cfg",$shareCfg);
-    file_put_contents($communityPaths['backupLog'],"Deleting any appdata files stored on the array\n",FILE_APPEND);
+    backupLog("Deleting any appdata files stored on the array");
     exec('rm -rf '.escapeshellarg("/mnt/user0/$shareName"));
   
-    file_put_contents($communityPaths['backupLog'],"Restore finished.  Ideally you should now restart your server\n",FILE_APPEND);
+    backupLog("Restore finished.  Ideally you should now restart your server");
   }
 }
 if ( $returnValue > 0 ) {
@@ -405,7 +397,7 @@ if ( $returnValue > 0 ) {
   foreach ($rsyncLog as $logLine) {
     ++$line;
     logger($logLine);
-    file_put_contents($communityPaths['backupLog'],$logLine,FILE_APPEND);
+    backupLog($logLine);
   }
 }
 if ( $restore ) {
@@ -413,7 +405,7 @@ if ( $restore ) {
 } else {
   unlink($communityPaths['backupProgress']);
 }
-file_put_contents($communityPaths['backupLog'],"Backup / Restore Completed\n",FILE_APPEND);
+backupLog("Backup / Restore Completed");
 logger("Backup / Restore Completed");
 
 ?>
