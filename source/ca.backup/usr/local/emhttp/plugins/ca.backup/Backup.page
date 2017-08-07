@@ -4,7 +4,7 @@ Title="Backup / Settings"
 <?
 ###############################################################
 #                                                             #
-# Community Applications copyright 2015-2016, Andrew Zawadzki #
+# Community Applications copyright 2015-2017, Andrew Zawadzki #
 #                                                             #
 ###############################################################
 require_once("/usr/local/emhttp/plugins/ca.backup/include/caCredits.php");

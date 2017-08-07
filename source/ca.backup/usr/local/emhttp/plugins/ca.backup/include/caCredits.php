@@ -1,7 +1,7 @@
 <?
 ###############################################################
 #                                                             #
-# Community Applications copyright 2015-2016, Andrew Zawadzki #
+# Community Applications copyright 2015-2017, Andrew Zawadzki #
 #                                                             #
 ###############################################################
 
@@ -35,7 +35,7 @@ $caCredits = "
       </tr>
     </table></center>
     <br>
-    <center><em><font size='1'>Copyright 2015-2016 Andrew Zawadzki</font></em></center>
+    <center><em><font size='1'>Copyright 2015-2017 Andrew Zawadzki</font></em></center>
     <center><a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7M7CBCVU732XG' target='_blank'><img src='https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif'></a></center>
     <br><center><a href='http://lime-technology.com/forum/index.php?topic=53694.0' target='_blank'>Plugin Support Thread</a></center>
   ";

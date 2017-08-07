@@ -2,7 +2,7 @@
 <?PHP
 ###############################################################
 #                                                             #
-# Community Applications copyright 2015-2016, Andrew Zawadzki #
+# Community Applications copyright 2015-2017, Andrew Zawadzki #
 #                                                             #
 ############################################################### 
 
@@ -213,9 +213,6 @@ if ( $backupOptions['runRsync'] == "true" ) {
   logger("$logLine appData from $source to $destination");
   backupLog("$logLine appData from $source to $destination");
   $command = '/usr/bin/rsync '.$backupOptions['rsyncOption'].' '.$dockerIMGFilter.' '.$rsyncExcluded.' --log-file="'.$communityPaths['backupLog'].'" "'.$source.'" "'.$destination.'" > /dev/null 2>&1';
-  if ( is_file("/boot/config/plugins/ca.backup/nice") ) {
-    $command = trim(file_get_contents("/boot/config/plugins/ca.backup/nice"))." $command";
-  }
   logger('Using command: '.$command);
   backupLog("Executing rsync: $command");
   exec("mkdir -p ".escapeshellarg($destination));
@@ -353,6 +350,7 @@ if ( ! $restore && ($backupOptions['datedBackup'] == 'yes') ) {
     } else {
       $currentDate = date_create(now);
       $dirContents = dirContents($basePathBackup);
+			unset($command);
       foreach ($dirContents as $dir) {
         $folderDate = date_create_from_format("Y-m-d@G.i",$dir);
         if ( ! $folderDate ) { continue; }
@@ -361,14 +359,20 @@ if ( ! $restore && ($backupOptions['datedBackup'] == 'yes') ) {
         if ( $age <= (0 - $backupOptions['deleteOldBackup']) ) {
           logger("Deleting $basePathBackup/$dir");
           backupLog("Deleting Dated Backup set: $basePathBackup/$dir");
-          exec("echo Deleting $basePathBackup/$dir >> ".$communityPaths['backupLog']."\n");
-          $command = 'rm -rf '.escapeshellarg($basePathBackup).'/'.$dir;
-          if ( is_file("/boot/config/plugins/ca.backup/nice") ) {
-            $command = trim(file_get_contents("/boot/config/plugins/ca.backup/nice"))." $command";
-          }
-          exec($command);
+          $command .= 'nice -n 19 rm -rf '.escapeshellarg($basePathBackup.'/'.$dir)."\n";
         }   
       }
+			if ( $command ) {
+				$command = "#!/bin/bash\necho 'Deleting Old Backup Sets' > /tmp/ca.backup/tempFiles/deleteInProgress\n$command\nrm /tmp/ca.backup/tempFiles/deleteInProgress\n";
+				$descriptorspec = array(
+					0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+					1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+					2 => array("file", "/tmp/error-output.txt", "a") // stderr is a file to write to
+				);
+				file_put_contents($communityPaths['deleteScriptPath'],$command);
+				exec("chmod 0777 {$communityPaths['deleteScriptPath']}");
+				$process = proc_open($communityPaths['deleteScriptPath'], $descriptorspec,$pipes);
+			}
     }
   }
 }

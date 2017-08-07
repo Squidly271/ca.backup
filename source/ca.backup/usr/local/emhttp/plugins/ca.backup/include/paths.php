@@ -1,7 +1,7 @@
 <?PHP
 ###############################################################
 #                                                             #
-# Community Applications copyright 2015-2016, Andrew Zawadzki #
+# Community Applications copyright 2015-2017, Andrew Zawadzki #
 #                                                             #
 ###############################################################
 
@@ -27,5 +27,6 @@ $communityPaths['backupScript']                  = "/usr/local/emhttp/plugins/ca
 $communityPaths['addCronScript']                 = "/usr/local/emhttp/plugins/ca.backup/scripts/addCron.php";
 $communityPaths['unRaidDockerSettings']          = "/boot/config/docker.cfg";
 $communityPaths['unRaidDisks']                   = "/var/local/emhttp/disks.ini";
+$communityPaths['deleteScriptPath']              = $communityPaths['tempFiles']."/deleteScript";
 
 ?>
