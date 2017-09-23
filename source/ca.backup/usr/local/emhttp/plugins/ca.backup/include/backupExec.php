@@ -172,7 +172,7 @@ case 'applyBackupOptions':
 
 case 'checkBackup':
   if ( is_file($communityPaths['backupLog']) ) {
-    $backupLines = "<font size='0'>".shell_exec("tail -n10 ".$communityPaths['backupLog'])."</font>";
+    $backupLines = "<font size='0'><tt>".shell_exec("tail -n10 ".$communityPaths['backupLog'])."</tt></font>";
     $backupLines = str_replace("\n","<br>",$backupLines);
   } else {
     $backupLines = "<br><br><br>";

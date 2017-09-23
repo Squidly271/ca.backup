@@ -525,7 +525,7 @@ function setExcluded() {
 				else {
 					var checked = $el
 						.map(function() {
-							return $(this).parent().find('a:first').text();
+							return $(this).parent().find('a:first').attr("rel");
 						})
 						.get()
 						.join(',');
