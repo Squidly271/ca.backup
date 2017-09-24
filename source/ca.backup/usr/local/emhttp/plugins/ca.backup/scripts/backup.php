@@ -206,6 +206,7 @@ if ( $backupOptions['excluded'] ) {
   foreach ($exclusions as $excluded) {
     $rsyncExcluded .= '--exclude "'.$excluded.'" ';
   }
+	$rsyncExcluded = str_replace($source,"",$rsyncExcluded);
 }
 
 if ( $backupOptions['runRsync'] == "true" ) {
